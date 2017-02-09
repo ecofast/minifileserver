@@ -21,18 +21,18 @@ func (fh *FileHandler) Initialize(filePath string) {
 }
 
 func (fh *FileHandler) GetFile(filename string) ([]byte, error) {
-	s := strings.ToLower(filename)
+	lowername := strings.ToLower(filename)
 	fh.mutex.Lock()
 	defer fh.mutex.Unlock()
-	buf, ok := fh.fileCaches[s]
+	buf, ok := fh.fileCaches[lowername]
 	if !ok {
-		s = fh.filePath + filename
-		if FileExists(s) {
-			data, err := ioutil.ReadFile(s)
+		fullname = fh.filePath + filename
+		if FileExists(fullname) {
+			data, err := ioutil.ReadFile(fullname)
 			if err != nil {
 				return nil, err
 			}
-			fh.add(filename, data)
+			fh.add(lowername, data)
 			return data, nil
 		}
 		return nil, errors.New("The required file does not exists: " + filename)
